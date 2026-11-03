@@ -1,0 +1,29 @@
+#!/bin/sh
+# yt2script -- thin wrapper so the venv's interpreter is always the one used.
+#
+# This file sits in the plugin's bin/, which Claude Code puts on the Bash
+# tool's PATH while the plugin is enabled, so the skill can call `yt2script`
+# as a bare command with no install step of its own.
+set -e
+
+SELF=$0
+# Follow a symlink chain, so this works called directly or linked onto PATH.
+while [ -L "$SELF" ]; do
+    LINK=$(readlink "$SELF")
+    case $LINK in
+        /*) SELF=$LINK ;;
+        *)  SELF=$(dirname "$SELF")/$LINK ;;
+    esac
+done
+ROOT=$(cd "$(dirname "$SELF")/.." && pwd)
+
+DATA=${YT2SCRIPT_HOME:-$HOME/.local/share/yt2script}
+PY=$DATA/venv/bin/python
+
+if [ ! -x "$PY" ]; then
+    echo "yt2script: 還沒裝好執行環境。跑一次這個就好：" >&2
+    echo "    sh \"$ROOT/cli/install.sh\"" >&2
+    exit 127
+fi
+
+exec "$PY" "$ROOT/cli/driver.py" "$@"

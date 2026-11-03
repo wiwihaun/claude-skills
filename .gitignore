@@ -1,0 +1,11 @@
+# Nothing generated belongs in here. The venv and the 3 GB Whisper model live
+# in ~/.local/share/yt2script/ by design, outside the repo and outside the
+# plugin directory -- see plugins/yt2script/cli/install.sh.
+__pycache__/
+*.pyc
+.DS_Store
+
+# Transcripts are this tool's output, and they are derivative works of someone
+# else's video. They do not go in a public repository.
+*.vtt
+transcripts/

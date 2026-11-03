@@ -1,0 +1,22 @@
+# Direct dependencies only.
+#
+# This replaced a 33-line `pip freeze`. Freezing pinned every transitive
+# package, and -- worse -- pinned yt-dlp, which is the one thing here that must
+# stay free to move.
+
+# Deliberately unpinned. YouTube changes its extractor, yt-dlp breaks, and the
+# documented fix is to upgrade. A pin blocks that fix.
+# See TROUBLESHOOTING.md section 1.
+yt-dlp>=2026.10.26
+
+faster-whisper>=1.2.1
+opencc-python-reimplemented>=0.1.7
+
+# Pinned on purpose, and the reason matters: faster-whisper 1.2.1 calls
+# av.open(..., metadata_errors="ignore"), av 19.0 removed that argument, and
+# faster-whisper declares a bare `av` with no upper bound. An unpinned install
+# therefore fails at transcription time with
+#   TypeError: open() got an unexpected keyword argument 'metadata_errors'
+# Tested against av 18.1.0. Drop this cap once faster-whisper ships a fix.
+# See TROUBLESHOOTING.md section 9.
+av<19
