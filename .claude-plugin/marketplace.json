@@ -1,6 +1,6 @@
 {
   "name": "wiwihaun-skills",
-  "description": "Two skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, and a pre-build gate that pressure-tests a product idea before any code gets written.",
+  "description": "Four skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, and a wider-searching fork of find-skills.",
   "owner": {
     "name": "wiwihaun",
     "url": "https://github.com/wiwihaun"
@@ -11,14 +11,52 @@
       "source": "./plugins/yt2script",
       "description": "YouTube link to verbatim Traditional Chinese transcript. Human subtitles first, native auto-captions second, local Whisper large-v3 third. No API keys, no paid services, nothing leaves the machine except the audio fetch.",
       "category": "transcription",
-      "tags": ["youtube", "transcript", "whisper", "yt-dlp", "chinese", "zh-hant"]
+      "tags": [
+        "youtube",
+        "transcript",
+        "whisper",
+        "yt-dlp",
+        "chinese",
+        "zh-hant"
+      ]
     },
     {
       "name": "prebuild-gate",
       "source": "./plugins/prebuild-gate",
       "description": "Gate a product idea before writing code: how it charges, and where the first paying customers come from. Researches what comparable products actually earn in the last 30 days and returns a go / no-go memo.",
       "category": "product",
-      "tags": ["validation", "pricing", "cold-start", "indie-hacking"]
+      "tags": [
+        "validation",
+        "pricing",
+        "cold-start",
+        "indie-hacking"
+      ]
+    },
+    {
+      "name": "whatfunc",
+      "source": "./plugins/whatfunc",
+      "description": "Survey the products that already exist in a category, extract each one's complete feature inventory, and write it up as a build spec with feasibility marks and a recommended build order.",
+      "category": "research",
+      "tags": [
+        "market-research",
+        "feature-survey",
+        "build-spec",
+        "requirements",
+        "competitive-analysis"
+      ]
+    },
+    {
+      "name": "find-skills",
+      "source": "./plugins/find-skills",
+      "description": "Find and install agent skills. Searches what is already installed on the machine and both on-disk catalogs before touching the network, and reports cost as two separate questions. A modified fork of vercel-labs/skills.",
+      "category": "tooling",
+      "tags": [
+        "skills",
+        "discovery",
+        "install",
+        "catalog",
+        "marketplace"
+      ]
     }
   ]
 }

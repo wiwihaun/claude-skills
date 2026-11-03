@@ -1,0 +1,11 @@
+{
+  "name": "find-skills",
+  "displayName": "find-skills (fork)",
+  "version": "1.0.0",
+  "description": "Find and install agent skills. Searches what is already installed on the machine and both on-disk catalogs before touching the network, and reports cost as two separate questions. A modified fork of vercel-labs/skills@find-skills.",
+  "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/find-skills",
+  "repository": "https://github.com/wiwihaun/claude-skills",
+  "license": "MIT",
+  "keywords": ["skills", "discovery", "install", "catalog", "marketplace"]
+}

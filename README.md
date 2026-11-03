@@ -1,12 +1,17 @@
 # claude-skills
 
-Two Claude Code plugins. They have nothing to do with each other except that
-both exist to stop a particular kind of wasted effort.
+Four Claude Code plugins. The first two have nothing to do with each other
+except that both exist to stop a particular kind of wasted effort. The other two
+approach the same problem from opposite ends: finding out what already exists
+before you build it, and finding out what you already have before you install
+more.
 
 | Plugin | What it does | Setup |
 | :- | :- | :- |
 | **yt2script** | Turns a YouTube link into a verbatim Traditional Chinese transcript, entirely on your machine | One command, then ~3 GB on first Whisper run |
 | **prebuild-gate** | Pressure-tests a product idea *before* you write code: how it charges, and where the first paying customers come from | None |
+| **whatfunc** | Surveys the products that already exist in a category and turns their documentation into a build spec, ending in a build order | None |
+| **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
 
 ## Install
 
@@ -22,7 +27,15 @@ claude plugin install prebuild-gate@wiwihaun-skills
 claude plugin install yt2script@wiwihaun-skills
 ```
 
-Install either one on its own — they share no code.
+```bash
+claude plugin install whatfunc@wiwihaun-skills
+```
+
+```bash
+claude plugin install find-skills@wiwihaun-skills
+```
+
+Install any one on its own — they share no code.
 
 ---
 
@@ -145,9 +158,75 @@ fetch live figures instead of trusting them.
 
 ---
 
+## whatfunc
+
+Before you build something, the people who already built it have written your
+requirements document for you. Every item in their documentation exists because a
+paying user needed it, which makes it more honest than a feature list written from
+imagination.
+
+```
+/whatfunc:whatfunc 社群發文
+```
+
+It writes `<短名>-feature-spec.md`: every feature found, grouped into categories
+that come from the material rather than a fixed taxonomy, each attributed to the
+product it came from and marked **本地可做** / **要公開端點** / **要常駐** /
+**要付費 API** / **不值得**, ending in a recommended build order. Name what you
+already know you want and it is excluded from the survey, because the value is in
+what you have not thought of.
+
+**It looks on your own machine before searching anything.** An installed skill
+ships its whole source — scripts, reference files, schemas — not a catalog
+summary. On one run the richest source in the entire survey had 271 lines of prose
+sitting on 4,197 lines of Python and 19,730 lines of XSD schemas; ranked by prose
+alone it did not make the top eight.
+
+**It hunts the destructive-failure list**, which is the richest thing in a mature
+product's docs and never in its marketing: the oddly specific prohibitions — this
+colour format corrupts the file, reordering these two XML siblings makes the
+document unopenable — because every one of them is a bug somebody already paid
+for.
+
+More in [`plugins/whatfunc/README.md`](plugins/whatfunc/README.md).
+
+---
+
+## find-skills
+
+A modified fork of [vercel-labs/skills](https://github.com/vercel-labs/skills) →
+`skills/find-skills`. Upstream searches [skills.sh](https://skills.sh/); this
+version searches three places in order of cost — your own machine, then the two
+catalogs already on disk, then skills.sh — and reports what *using* a skill costs
+rather than only what installing it costs.
+
+Three findings drove the change, each of which cost a wrong answer to learn:
+
+- **The CLI's list of installed skills is incomplete.** On one machine
+  `npx skills list -g` reported three while eight skill directories existed —
+  four were plugin skills it cannot see, one had no `SKILL.md`.
+- **Being listed in the built-in directory is not being reviewed.** On a
+  3,604-entry cache, `checks.review.state` split 442 `done` against 3,162 `none`.
+  A plugin in two catalogs with `none` in each was listed twice, not vetted twice.
+- **Matching on `.name` alone finds almost nothing.** A query for `threads`
+  matched 0 entries by name and 26 by name-plus-summary — and an empty result
+  looks identical to "unreviewed" unless the name is printed beside the state.
+
+What changed, and the note about sharing a name with upstream, are in
+[`plugins/find-skills/README.md`](plugins/find-skills/README.md).
+
+---
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
+
+**Except [`plugins/find-skills/`](plugins/find-skills)**, which is a modified fork
+of [vercel-labs/skills](https://github.com/vercel-labs/skills), MIT, Copyright (c)
+2026 Vercel, Inc. Their licence is kept with it at
+[plugins/find-skills/LICENSE](plugins/find-skills/LICENSE) and governs that
+plugin; the modifications are listed in
+[its README](plugins/find-skills/README.md).
 
 yt2script installs these at runtime rather than vendoring them, so their
 licences don't attach to this repository, but for the record:

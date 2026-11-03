@@ -1,9 +1,10 @@
 {
   "name": "yt2script",
   "displayName": "yt2script",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "YouTube link to verbatim Traditional Chinese transcript, entirely local and free.",
   "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/yt2script",
   "repository": "https://github.com/wiwihaun/claude-skills",
   "license": "MIT",
   "keywords": ["youtube", "transcript", "whisper", "yt-dlp", "chinese", "zh-hant", "subtitles"]

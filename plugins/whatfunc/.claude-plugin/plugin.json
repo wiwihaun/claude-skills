@@ -1,0 +1,11 @@
+{
+  "name": "whatfunc",
+  "displayName": "whatfunc",
+  "version": "1.0.0",
+  "description": "Survey the products that already exist in a category, extract each one's complete feature inventory, and write it up as a build spec with feasibility marks and a recommended build order.",
+  "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/whatfunc",
+  "repository": "https://github.com/wiwihaun/claude-skills",
+  "license": "MIT",
+  "keywords": ["market-research", "feature-survey", "build-spec", "requirements", "competitive-analysis"]
+}

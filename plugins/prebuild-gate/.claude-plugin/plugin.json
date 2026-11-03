@@ -1,9 +1,10 @@
 {
   "name": "prebuild-gate",
   "displayName": "Pre-build gate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pressure-test a product idea before any code gets written: pricing model and cold-start channel, researched against what comparables actually earn.",
   "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/prebuild-gate",
   "repository": "https://github.com/wiwihaun/claude-skills",
   "license": "MIT",
   "keywords": ["product-validation", "pricing", "cold-start", "indie-hacking", "mrr"]
