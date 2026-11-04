@@ -49,7 +49,8 @@ comparison is worth reading before you pick a path.
   stock is worth *if* the assumptions in the table hold, and the table exists so
   the user can replace the ones they disagree with.
 - **Not a screener.** This takes real work per company. Say so up front.
-- **Free tools only.** SEC EDGAR, company IR pages and web search. No paid data
+- **Free tools only.** SEC EDGAR, TWSE / TPEx open data and MOPS, company IR
+  pages and web search. No paid data
   API, no key. See *Where the numbers come from* for what that costs you.
 
 ## Step 0 — Pick the path
@@ -340,12 +341,58 @@ example's two checkpoints came due two months later and can now be graded —
 
 Free sources only. In order of how much you should trust them:
 
-1. **SEC EDGAR** — `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=<TICKER>&type=8-K`
-   and the quarterly update exhibit. Primary, dated, free. Use it for deliveries,
-   revenue, operating income, cash, debt, share count. Non-US issuers: the
-   company's own IR releases.
+1. **Exchange and regulator filings** — primary, dated, free. Use them for
+   deliveries, revenue, operating income, cash, debt, share count.
+   US: SEC EDGAR through `data.sec.gov`. Taiwan: TWSE / TPEx open data and MOPS
+   (公開資訊觀測站). Elsewhere: the company's own IR releases.
+   **`references/data-sources.md` has the exact routes — three per kind of
+   number, in the order to try them.**
 2. **Earnings call transcripts** — for guidance and for the Step 4 track record.
 3. **Web search** — for peer multiples and analyst targets. Always date them.
+
+### When a source refuses you: another door, never a disguise
+
+The same number almost always sits behind more than one official door. A
+Taiwanese monthly revenue figure is published by the exchange's open-data API,
+by MOPS and by the company's own release; a US company's reported numbers are in
+SEC's XBRL API and in the filing itself. So when one route blocks you, **go to
+the next route for the same number**, and keep going down the list in
+`references/data-sources.md`. Stopping at the first refusal leaves a hole the
+model did not need.
+
+Another door means: a different official endpoint, a different format of the
+same publication (API, HTML page, PDF), the company's IR site, an archived copy
+on the Wayback Machine, and last — labelled as second-hand — a news report that
+quotes the figure.
+
+It never means dressing the request up as something it is not: no browser
+User-Agent on a script, no rotating identities, no proxies, no solving a
+CAPTCHA. A block page is the site declining *this client*; the answer is a
+different door, not a costume. On 2026-11-05 the new MOPS API refused a plain
+request for 3443's announcement list, and the old MOPS site returned the same
+list to the same plain request.
+
+Declaring *more* about yourself is the opposite, and is fine. SEC refuses
+undeclared automated tools and asks for a User-Agent that names the tool and a
+contact. A tool name is enough for `data.sec.gov`; `www.sec.gov` also wants a
+contact address — ask the user whether to give one, and never fill in theirs or
+invent one.
+
+Two checks before trusting anything a route returns:
+
+- **A block page can arrive as HTTP 200.** Read the body before parsing it.
+  Parsed blindly, a refusal becomes "this company made no announcements".
+- **Confirm it is the company you asked for.** A reused MOPS connection has
+  returned another company's data. Use a fresh session per request and check the
+  ticker printed in the response.
+
+**When subagents gather the data, put this subsection and the route table in
+their prompt verbatim.** They do not read this file, and the one known breach of
+this rule came from a subagent that had never seen it.
+
+In the report's source list, say which route each figure came through. If every
+route for a figure fails, it is a labelled hole (below) — and list the routes you
+tried.
 
 **What this costs you: there is no reliable live quote.** Web search returns
 yesterday's close at best, and sometimes a foreign listing in another currency.
