@@ -1,6 +1,6 @@
 {
   "name": "wiwihaun-skills",
-  "description": "Four skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, and a wider-searching fork of find-skills.",
+  "description": "Five skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, a stock valuation that writes down what has to be true for today's price, and a wider-searching fork of find-skills.",
   "owner": {
     "name": "wiwihaun",
     "url": "https://github.com/wiwihaun"
@@ -56,6 +56,19 @@
         "install",
         "catalog",
         "marketplace"
+      ]
+    },
+    {
+      "name": "fairprice",
+      "source": "./plugins/fairprice",
+      "description": "Estimate what a stock is worth by writing down what has to be true for today's price to make sense. Picks between sum-of-the-parts, normalized earnings times one multiple, and finite-life NPV, then reports a bear/base/bull range with falsifiable checkpoints.",
+      "category": "research",
+      "tags": [
+        "valuation",
+        "equity-research",
+        "sum-of-the-parts",
+        "dcf",
+        "financial-analysis"
       ]
     }
   ]

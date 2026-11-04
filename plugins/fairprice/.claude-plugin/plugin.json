@@ -1,0 +1,11 @@
+{
+  "name": "fairprice",
+  "displayName": "fairprice",
+  "version": "1.0.0",
+  "description": "Estimate what a stock is worth by writing down what has to be true for today's price to make sense. Picks between sum-of-the-parts, normalized earnings times one multiple, and finite-life NPV, then reports a bear/base/bull range with falsifiable checkpoints.",
+  "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/fairprice",
+  "repository": "https://github.com/wiwihaun/claude-skills",
+  "license": "MIT",
+  "keywords": ["valuation", "equity-research", "sum-of-the-parts", "dcf", "financial-analysis"]
+}

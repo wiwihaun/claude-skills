@@ -1,6 +1,6 @@
 # claude-skills
 
-Four Claude Code plugins. The first two have nothing to do with each other
+Five Claude Code plugins. The first two have nothing to do with each other
 except that both exist to stop a particular kind of wasted effort. The other two
 approach the same problem from opposite ends: finding out what already exists
 before you build it, and finding out what you already have before you install
@@ -12,6 +12,7 @@ more.
 | **prebuild-gate** | Pressure-tests a product idea *before* you write code: how it charges, and where the first paying customers come from | None |
 | **whatfunc** | Surveys the products that already exist in a category and turns their documentation into a build spec, ending in a build order | None |
 | **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
+| **fairprice** | Values a stock by writing down what has to be true for today's price, picking the method before the number | None |
 
 ## Install
 
@@ -33,6 +34,10 @@ claude plugin install whatfunc@wiwihaun-skills
 
 ```bash
 claude plugin install find-skills@wiwihaun-skills
+```
+
+```bash
+claude plugin install fairprice@wiwihaun-skills
 ```
 
 Install any one on its own — they share no code.
@@ -214,6 +219,49 @@ Three findings drove the change, each of which cost a wrong answer to learn:
 
 What changed, and the note about sharing a name with upstream, are in
 [`plugins/find-skills/README.md`](plugins/find-skills/README.md).
+
+---
+
+## fairprice
+
+A share price is a claim about the future. This skill makes that claim explicit
+enough to argue with.
+
+```
+/fairprice:fairprice TSLA
+```
+
+**It picks the method before it picks a number.** Step 0 asks whether today's
+price can be explained by today's earnings, then routes to sum-of-the-parts
+(several businesses with separable economics), normalized earnings times one
+multiple (one business, however many end markets), or finite-life NPV (revenue
+with a legal expiry date — a patent cliff, a concession, a mine life). Taking
+the wrong path is the most expensive mistake available: it produces a detailed
+table that looks rigorous and is built on companies that do not exist.
+
+**A revenue breakdown by end market is not a set of segments.** Before splitting
+anything it asks whether each piece could be sold off on its own. If not, it is
+a mix, and one multiple on the whole is the honest tool.
+
+**Every multiple has to name a peer who trades there.** The same earnings at 14×
+and 40× differ by nearly 3×, so a multiple without a source is where a valuation
+becomes whatever you wanted it to be. Where no comparable exists, the documented
+fallback is PEG ≈ 1 — never "pick a number".
+
+**Management's dates get discounted by the company's own record**, measured from
+three to five years of its own guidance against what actually happened. A clean
+record gets 1.0×.
+
+The output is a dated report in Traditional Chinese with a bear/base/bull range,
+a mandatory sensitivity table, a line saying what the market is already paying
+for, and checkpoints with dates and numeric thresholds that would prove it
+wrong. Written to a `fairprice/` folder, never into a public repository.
+
+More, including the method's origin and the failure-mode list, in
+[`plugins/fairprice/README.md`](plugins/fairprice/README.md).
+
+**It is not investment advice.** The output is arithmetic with stated
+assumptions; it never says buy or sell.
 
 ---
 
