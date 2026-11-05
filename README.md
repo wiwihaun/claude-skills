@@ -13,7 +13,7 @@ more.
 | **whatfunc** | Surveys the products that already exist in a category and turns their documentation into a build spec, ending in a build order | None |
 | **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
 | **fairprice** | Values a stock by writing down what has to be true for today's price, picking the method before the number | None |
-| **cover-letter-tailor** | Merges every résumé version into one profile you confirm line by line, then writes cover letters from a pasted job description using only those facts | None (macOS) |
+| **cover-letter-tailor** | Merges every résumé version and the result what you made into one profile you confirm line by line, then writes cover letters from a pasted job description using only those facts | None (macOS) |
 
 ## Install
 
