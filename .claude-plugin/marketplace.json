@@ -1,6 +1,6 @@
 {
   "name": "wiwihaun-skills",
-  "description": "Five skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, a stock valuation that writes down what has to be true for today's price, and a wider-searching fork of find-skills.",
+  "description": "Six skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, a stock valuation that writes down what has to be true for today's price, a wider-searching fork of find-skills, and a cover-letter writer that only uses résumé facts you have confirmed.",
   "owner": {
     "name": "wiwihaun",
     "url": "https://github.com/wiwihaun"
@@ -69,6 +69,19 @@
         "sum-of-the-parts",
         "dcf",
         "financial-analysis"
+      ]
+    },
+    {
+      "name": "cover-letter-tailor",
+      "source": "./plugins/cover-letter-tailor",
+      "description": "Merge every version of your résumé into one profile you have confirmed line by line, then turn a pasted job description into a requirements table, a fit verdict, a cover letter and a private gap report, using only facts from that profile. Conflicting dates, titles and numbers are asked, never picked.",
+      "category": "career",
+      "tags": [
+        "cover-letter",
+        "resume",
+        "job-search",
+        "career",
+        "zh-hant"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 # claude-skills
 
-Five Claude Code plugins. The first two have nothing to do with each other
+Six Claude Code plugins. The first two have nothing to do with each other
 except that both exist to stop a particular kind of wasted effort. The other two
 approach the same problem from opposite ends: finding out what already exists
 before you build it, and finding out what you already have before you install
@@ -13,6 +13,7 @@ more.
 | **whatfunc** | Surveys the products that already exist in a category and turns their documentation into a build spec, ending in a build order | None |
 | **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
 | **fairprice** | Values a stock by writing down what has to be true for today's price, picking the method before the number | None |
+| **cover-letter-tailor** | Merges every résumé version into one profile you confirm line by line, then writes cover letters from a pasted job description using only those facts | None (macOS) |
 
 ## Install
 
@@ -38,6 +39,10 @@ claude plugin install find-skills@wiwihaun-skills
 
 ```bash
 claude plugin install fairprice@wiwihaun-skills
+```
+
+```bash
+claude plugin install cover-letter-tailor@wiwihaun-skills
 ```
 
 Install any one on its own — they share no code.
@@ -262,6 +267,34 @@ More, including the method's origin and the failure-mode list, in
 
 **It is not investment advice.** The output is arithmetic with stated
 assumptions; it never says buy or sell.
+
+---
+
+## cover-letter-tailor
+
+Old résumés contradict each other, and a letter written straight from them
+turns those contradictions into claims an interviewer will check. This skill
+keeps what you once wrote (`raw/`) apart from what you have confirmed is true
+(`profile/`), and writes letters only from the second.
+
+```
+/cover-letter-tailor:cover-letter-tailor 整理履歷
+```
+
+**Mode 0 merges, and asks instead of picking.** Every résumé version is read
+and merged; where dates, titles or numbers disagree, each version's original
+sentence is shown and you choose. **Mode 1 writes the letter** from a pasted job
+description: a requirements table, evidence for each line, a verdict, the
+letter, and a gap report only you see. **Mode 2 re-checks** entries that have
+gone six months unconfirmed.
+
+**Relevance decides detail, and the letter tells one story.** Experience in the
+job's own field gets tools and numbers; experience from another field gets one
+sentence naming the method that carries over. Points that would break the
+storyline are left for the interview, not squeezed in.
+
+The folder is personal data, so nothing is uploaded, searched or put in a URL.
+More in [`plugins/cover-letter-tailor/README.md`](plugins/cover-letter-tailor/README.md).
 
 ---
 

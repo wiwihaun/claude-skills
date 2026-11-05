@@ -1,0 +1,11 @@
+{
+  "name": "cover-letter-tailor",
+  "displayName": "cover-letter-tailor",
+  "version": "1.0.0",
+  "description": "Merge every version of your résumé into one profile you have confirmed line by line, then turn a pasted job description into a requirements table, a fit verdict, a cover letter and a private gap report, using only facts from that profile. Conflicting dates, titles and numbers are asked, never picked.",
+  "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/cover-letter-tailor",
+  "repository": "https://github.com/wiwihaun/claude-skills",
+  "license": "MIT",
+  "keywords": ["cover-letter", "resume", "job-search", "career", "zh-hant"]
+}
