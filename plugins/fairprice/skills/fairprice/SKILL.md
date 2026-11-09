@@ -418,14 +418,30 @@ Reports go in a **`fairprice/` folder** in the current directory — create it i
 it is not there (`mkdir -p fairprice`). Check `git remote -v` first — **never
 write it into a public repository.**
 
+**Taiwan-listed stocks** (TWSE / TPEx) are named by code and company name, with
+no method in the filename:
+
+```
+fairprice/<代號>-<公司名>-<YYYY-MM-DD>.md     ← e.g. 3443-創意電子-2026-11-05.md
+```
+
+Use the company name exactly as the report's title line writes it (鴻海,
+台積電, 聯亞光電, 日月光投控). A Taiwan company's US ADR report (TSM) takes
+the Taiwan code: `2330-台積電-…`. The method lives in the title line instead
+(「— 單一倍數法」「— 分業務加總」), so the first line must always say it.
+
+**Everything else** keeps the method in the filename:
+
 ```
 fairprice/<代號>-fairprice-<YYYY-MM-DD>.md          ← Path A
 fairprice/<代號>-earnings-multiple-<YYYY-MM-DD>.md  ← Path B
 fairprice/<代號>-patent-npv-<YYYY-MM-DD>.md         ← Path C
 ```
 
-The method is in the filename because a different method should not share a
-name with Path A — the folder collects them, it does not merge them.
+There the method is in the filename because a different method should not
+share a name with Path A — the folder collects them, it does not merge them.
+For Taiwan names, a second method on the same ticker and day is a filename
+collision: treat it like a re-run below and write `-v2`.
 
 **If that exact file already exists, this is a re-run.** Say so, and either
 overwrite on purpose or write `-v2`; never silently replace a report the user
