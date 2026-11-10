@@ -120,6 +120,13 @@ IR 的新聞稿與簡報。
 | 2026-11-05 | SEC，見上表 | `data.sec.gov`、`efts` 只要工具名稱；`www.sec.gov` 要聯絡方式 |
 | 2026-11-05 | Wayback `available` API | 通 |
 | 2026-11-05 之前 | MOPS `t05st32`／`t05st34` | 壞了 |
+| 2026-11-09 | sandisk.com newsroom 新聞稿，一般請求 | 通，一手 |
+| 2026-11-09 | investor.sandisk.com、investor.wdc.com | 403（Akamai）；改走公司 newsroom 或 Wayback 存檔 |
+| 2026-11-09 | files.quartr.com 的 10-Q／10-K／簡報鏡像（由 stockanalysis.com/filings 連過去） | 通；是原始文件的副本，不必碰 `www.sec.gov` |
+| 2026-11-09 | Business Wire、Macrotrends、Benzinga、MarketBeat、Seeking Alpha | 403；同一個數字改從其他來源或 Wayback 存檔拿 |
+| 2026-11-09 | Wayback `available` API | 一度回 429，稍後可用 |
+| 2026-11-09 | Kioxia IR 資料 xlsx（ssl4.eir-parts.net） | 通 |
+| 2026-11-09 | `data.sec.gov` 已下市公司（舊 SanDisk，CIK 0001000180） | 通；XBRL 約從 2009 年起，更早的年度走 Wayback 上的 10-K 存檔 |
 
 **目前已知唯一一次違規**：2026-11-05 跑 3443 時，一個 subagent 被 MOPS 新站擋下後，
 改用瀏覽器 User-Agent 硬闖成功。它沒看過這條規則。同一份公告清單，
