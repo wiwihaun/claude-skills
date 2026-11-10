@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""yt2script -- YouTube link -> Traditional Chinese verbatim transcript.
+"""yt2script -- YouTube link -> verbatim transcript in the language spoken.
+
+Chinese comes out in Traditional characters; other languages stay as spoken,
+never translated.
 
 Order of preference, stopping at the first that yields text:
   1. human-written subtitles   (best quality)
-  2. native automatic captions (machine-translated xx-zh tracks are refused)
+  2. native automatic captions (machine-translated tracks are refused)
   3. local Whisper transcription (no network beyond fetching the audio)
 """
 import argparse, os, re, shutil, sys, tempfile
+from urllib.parse import urlparse, parse_qs
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The 3 GB model cache lives OUTSIDE the plugin directory on purpose: a plugin
@@ -91,16 +95,49 @@ def probe(url):
 
 
 def is_translated(entries):
-    """YouTube labels machine-translated auto-caption tracks '... from X'."""
-    return any(' from ' in (e.get('name') or '') for e in entries)
+    """Is this a machine translation of another caption track?
+
+    The reliable marker is the `tlang` parameter in the track URL: YouTube
+    only adds it when it translates. Track names used to read
+    'Chinese (Traditional) from English', but by 2026-11 they read just
+    'Chinese (Traditional)', and a name-only check let all 156 translated
+    tracks of an English video through as if they were original.
+    """
+    for e in entries:
+        if ' from ' in (e.get('name') or ''):
+            return True
+        if 'tlang' in parse_qs(urlparse(e.get('url') or '').query):
+            return True
+    return False
 
 
-def pick_lang(tracks, allow_translated):
+def lang_order(spoken, wanted):
+    """Languages to look for, best first.
+
+    `--lang` wins. Otherwise the language the video is spoken in comes first:
+    a transcript is what was said, and a creator's Chinese subtitles on an
+    English video are a translation. Chinese videos keep the zh-TW-first order.
+    """
+    if wanted:
+        return wanted + [l for l in PREFERRED_LANGS if l not in wanted]
+    if spoken and not spoken.lower().startswith('zh'):
+        return [spoken] + PREFERRED_LANGS
+    return list(PREFERRED_LANGS)
+
+
+def pick_lang(tracks, allow_translated, order=PREFERRED_LANGS):
     avail = {k: v for k, v in (tracks or {}).items()
              if allow_translated or not is_translated(v)}
-    for want in PREFERRED_LANGS:
+    low = {k.lower(): k for k in avail}
+    for want in order:                       # exact; '-orig' is the untouched ASR track
+        w = want.lower()
+        for cand in (w + '-orig', w):
+            if cand in low:
+                return low[cand]
+    for want in order:                       # then regional variants: en -> en-US
+        w = want.lower()
         for k in avail:
-            if k.lower() == want.lower():
+            if k.lower().startswith(w + '-'):
                 return k
     return next(iter(avail), None)
 
@@ -222,7 +259,7 @@ def run_whisper(media, out_vtt, size, compute):
 
 def main():
     ap = argparse.ArgumentParser(prog='yt2script', add_help=True,
-                                 description='YouTube 連結 -> 繁體中文逐字稿')
+                                 description='YouTube 連結 -> 逐字稿（中文出繁體，其他語言照原文）')
     ap.add_argument('url')
     ap.add_argument('--out', default='.', help='輸出目錄（預設：當前目錄）')
     ap.add_argument('--model', default='large-v3', help='Whisper 模型尺寸')
@@ -233,7 +270,10 @@ def main():
     ap.add_argument('--allow-translated', action='store_true',
                     help='允許 xx-zh 機器翻譯字幕軌（品質差，預設拒絕）')
     ap.add_argument('--yes', action='store_true', help='不詢問即下載模型')
+    ap.add_argument('--lang', default='',
+                    help='指定優先的字幕語言，逗號分隔，例如 en 或 en,zh-TW（預設：影片的原始語言）')
     args = ap.parse_args()
+    wanted = [l.strip() for l in args.lang.split(',') if l.strip()]
 
     info, sub_client, media_client = probe(args.url)
     title = info.get('title') or info.get('id')
@@ -247,20 +287,24 @@ def main():
 
     man, auto = info.get('subtitles') or {}, info.get('automatic_captions') or {}
     native_auto = {k: v for k, v in auto.items() if not is_translated(v)}
+    spoken = info.get('language')
+    order = lang_order(spoken, wanted)
     log('探路', f"人工字幕 {len(man)} 軌 | 自動字幕 {len(auto)} 軌"
-               f"（原生 {len(native_auto)}，二次翻譯 {len(auto)-len(native_auto)}）")
+               f"（原生 {len(native_auto)}，二次翻譯 {len(auto)-len(native_auto)}）"
+               f" | 影片語言 {spoken or '未標示'}"
+               + (f" | 指定 --lang {','.join(wanted)}" if wanted else ''))
 
     tmp = tempfile.mkdtemp(prefix='yt2script.')
     media = None
     try:
         vtt = src = None
         if not args.force_whisper:
-            lang = pick_lang(man, args.allow_translated)
+            lang = pick_lang(man, args.allow_translated, order)
             if lang:
                 log('取得', f"第 1 步 人工字幕 {lang}")
                 vtt, src = fetch_subs(args.url, sub_client, lang, False, tmp), 'manual'
             else:
-                lang = pick_lang(auto, args.allow_translated)
+                lang = pick_lang(auto, args.allow_translated, order)
                 if lang:
                     log('取得', f"第 2 步 自動字幕 {lang}")
                     vtt, src = fetch_subs(args.url, sub_client, lang, True, tmp), 'auto'

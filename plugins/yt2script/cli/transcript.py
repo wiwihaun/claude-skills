@@ -11,6 +11,9 @@ import html, re, os, sys, glob
 TAG = re.compile(r'<[^>]*>')            # all HTML tags incl. <00:00:12.500>, <c>, </c>
 TS  = re.compile(r'(\d+):(\d{2}):(\d{2})[.,](\d{3})\s*-->\s*(\d+):(\d{2}):(\d{2})[.,](\d{3})')
 PUNCT_END = re.compile(r'[　-〿＀-￯.!?,;:…]$')
+# After ASCII punctuation a Latin word still needs its space: "plan. Well", not "plan.Well".
+ASCII_PUNCT_END = re.compile(r'[.!?,;:…]$')
+LATIN_START = re.compile(r'^[A-Za-z0-9"\'(\[]')
 
 
 def _opencc():
@@ -32,7 +35,7 @@ def secs(h, m, s, ms):
 
 
 def parse(path):
-    """VTT -> [{start, end, text}], tags and entities already gone."""
+    """VTT -> [{start, end, text, lines}], tags and entities already gone."""
     cues = []
     with open(path, encoding='utf-8-sig') as f:
         lines = f.read().splitlines()
@@ -40,11 +43,11 @@ def parse(path):
 
     def flush():
         if state['start'] is None: return
-        txt = TAG.sub('', ' '.join(state['buf']).strip())
-        txt = html.unescape(txt)
-        txt = re.sub(r'\s+', ' ', txt).strip()
+        rows = [re.sub(r'\s+', ' ', html.unescape(TAG.sub('', l))).strip() for l in state['buf']]
+        rows = [r for r in rows if r]
+        txt = ' '.join(rows)
         if txt:
-            cues.append({'start': state['start'], 'end': state['end'], 'text': txt})
+            cues.append({'start': state['start'], 'end': state['end'], 'text': txt, 'lines': rows})
 
     for ln in lines:
         m = TS.search(ln)
@@ -52,8 +55,13 @@ def parse(path):
             flush()
             state.update(start=secs(*m.groups()[:4]), end=secs(*m.groups()[4:]), buf=[])
         elif state['start'] is not None:
-            if ln.strip() == '':
+            if ln == '':
                 flush(); state.update(start=None, buf=[])
+            elif ln.strip() == '':
+                # A line holding only a space is payload, not the end of the cue.
+                # YouTube's ASR tracks open every cue with one; ending the cue
+                # there threw away the first sentence of the video.
+                continue
             elif (not re.match(r'^(WEBVTT|Kind:|Language:|NOTE|STYLE|REGION)', ln)
                   and not ln.strip().isdigit()):
                 state['buf'].append(ln.strip())
@@ -67,9 +75,22 @@ def dedup(cues):
     Only for YouTube's AUTO captions. Human subtitles and Whisper output have
     no such structure, and running this over them deletes genuine repeated
     lines -- in a comedy skit, saying it twice IS the joke.
+
+    Two shapes occur. Roll-up captions show two lines per cue, the first being
+    the previous cue's last line, with a 10 ms cue of the finished line between
+    them; a line carried over from the cue just before is dropped. Older tracks
+    grew one line word by word; the prefix rules below fold those.
     """
     out = []
+    prev = []
     for c in cues:
+        rows = c.get('lines') or [c['text']]
+        fresh = [r for r in rows if r not in prev]
+        prev = rows
+        if not fresh:                     # nothing new: a carried-over line
+            if out: out[-1]['end'] = c['end']
+            continue
+        c = dict(c, text=' '.join(fresh), lines=fresh)
         if not out:
             out.append(c); continue
         p = out[-1]
@@ -88,11 +109,20 @@ def cjk_len(s):
     return len(re.sub(r'\s+', '', s))
 
 
-def segment(cues, gap=3.0, maxchars=400):
-    """Break on a pause of >= gap seconds, or after about maxchars."""
+SENT_END = re.compile(r'[。！？!?.…][」』"\'）)]?$')
+
+
+def segment(cues, gap=3.0, maxchars=400, hardmax=600):
+    """Break on a pause of >= gap seconds, or after about maxchars.
+
+    Past maxchars, wait for a cue that ends a sentence before breaking, so a
+    paragraph does not stop at "what's going to happen" and resume at "in terms
+    of the future." Unpunctuated tracks never end a sentence; hardmax caps them.
+    """
     segs, cur, n = [], [], 0
     for i, c in enumerate(cues):
-        if cur and (c['start'] - cues[i-1]['end'] >= gap or n >= maxchars):
+        long_enough = n >= maxchars and (SENT_END.search(cues[i-1]['text']) or n >= hardmax)
+        if cur and (c['start'] - cues[i-1]['end'] >= gap or long_enough):
             segs.append(cur); cur, n = [], 0
         cur.append(c); n += cjk_len(c['text'])
     if cur: segs.append(cur)
@@ -100,12 +130,19 @@ def segment(cues, gap=3.0, maxchars=400):
 
 
 def join(seg):
-    """Concatenate cues verbatim; a space only where the source had no punctuation."""
+    """Concatenate cues verbatim.
+
+    Chinese after punctuation joins directly (。 needs no space). Latin text
+    always gets one: after ASCII punctuation the next English word still needs
+    its space, or 'plan.Well' and 'begin,and' come out glued. Nothing is added
+    but whitespace, so the cue-survival check cannot see this either way.
+    """
     out = ''
     for c in seg:
         if not out:
             out = c['text']
-        elif PUNCT_END.search(out):
+        elif PUNCT_END.search(out) and not (ASCII_PUNCT_END.search(out)
+                                            and LATIN_START.match(c['text'])):
             out += c['text']
         else:
             out += ' ' + c['text']

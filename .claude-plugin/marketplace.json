@@ -9,7 +9,7 @@
     {
       "name": "yt2script",
       "source": "./plugins/yt2script",
-      "description": "YouTube link to verbatim Traditional Chinese transcript. Human subtitles first, native auto-captions second, local Whisper large-v3 third. No API keys, no paid services, nothing leaves the machine except the audio fetch.",
+      "description": "YouTube link to a verbatim transcript in the language spoken (Chinese in Traditional characters, never translated). Human subtitles first, native auto-captions second, local Whisper large-v3 third. No API keys, no paid services, nothing leaves the machine except the audio fetch.",
       "category": "transcription",
       "tags": [
         "youtube",

@@ -8,7 +8,7 @@ more.
 
 | Plugin | What it does | Setup |
 | :- | :- | :- |
-| **yt2script** | Turns a YouTube link into a verbatim Traditional Chinese transcript, entirely on your machine | One command, then ~3 GB on first Whisper run |
+| **yt2script** | Turns a YouTube link into a verbatim transcript in the language spoken (Chinese in Traditional characters), entirely on your machine | One command, then ~3 GB on first Whisper run |
 | **prebuild-gate** | Pressure-tests a product idea *before* you write code: how it charges, and where the first paying customers come from | None |
 | **whatfunc** | Surveys the products that already exist in a category and turns their documentation into a build spec, ending in a build order | None |
 | **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
@@ -51,8 +51,10 @@ Install any one on its own — they share no code.
 
 ## yt2script
 
-A YouTube URL in, a `.md` transcript out, in Traditional Chinese. Three sources
-are tried in order, stopping at the first that yields text:
+A YouTube URL in, a `.md` transcript out, in the language the video is spoken
+in: Traditional Chinese for Chinese audio, the original language (for example
+English) for everything else. It never translates. Three sources are tried in
+order, stopping at the first that yields text:
 
 1. **Human-written subtitles** — best quality, when they exist
 2. **Native auto-captions** — machine-transcribed, but from the original audio
@@ -61,11 +63,16 @@ are tried in order, stopping at the first that yields text:
 The ordering is the point. Most transcript tools reach straight for speech
 recognition and throw away a human transcript that was sitting right there.
 
-**It refuses `xx-zh` tracks.** Those are captions machine-translated *from* the
-original language into Chinese — a translation of a transcription, degraded
+**It refuses machine-translated tracks.** Those are captions machine-translated
+*from* the original language — a translation of a transcription, degraded
 twice. They are usually what YouTube shows you first, and they are usually
-worse than running Whisper yourself. Override with `--allow-translated` if a
-bad track is genuinely all there is.
+worse than running Whisper yourself. They are recognised by the `tlang`
+parameter YouTube adds to a translated track's URL. Override with
+`--allow-translated` if a bad track is genuinely all there is.
+
+**It looks for the spoken language first.** An English talk with human Chinese
+subtitles gives you the English transcript, because the Chinese track is a
+translation. `--lang zh-TW` (or any list, `--lang en,zh-TW`) changes the order.
 
 **Simplified Chinese is converted to Traditional, and only when it actually is
 simplified.** Running a converter over already-Traditional text corrupts it
@@ -112,8 +119,9 @@ something it isn't is a different thing, and this tool won't.
 ### Known issues
 
 [`plugins/yt2script/KNOWN_ISSUES.md`](plugins/yt2script/KNOWN_ISSUES.md) — read
-it. The first entry is a real gap in the `xx-zh` refusal above: an *unlabelled*
-machine-translated track can still get through.
+it. The first entry is how the translated-track refusal above failed in
+practice — YouTube stopped labelling translations by name — and what the fix
+still depends on.
 
 Tested on macOS, Apple Silicon only.
 
