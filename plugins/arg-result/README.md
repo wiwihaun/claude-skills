@@ -40,6 +40,10 @@ never concede at all.
 - **Hollow claims are thrown out.** If nothing could prove a claim wrong, or no
   one would argue the opposite, the judge rejects it. Otherwise everything would
   survive as a truism.
+- **Partial concessions are split.** If a side accepts only part of the other
+  side's claim, the judge splits the accepted sentence off as its own entry and
+  the rest stays in dispute. Counting the whole claim as conceded would let the
+  part the other side refused survive.
 - **Sources are spot-checked.** The judge checks the citations carrying the
   most weight; a fabricated or misquoted source overturns whatever rested on it.
 - **From round 3, no new fronts.** New claims have to dig under existing ones.
@@ -67,8 +71,8 @@ dropped network connection is retried once on its own.
 
 It is slow on purpose. By default it runs up to 5 rounds (at least 3, ending
 early when a whole round changes nothing): about 10 debater speeches and 11
-rulings, each with web search. A 3-round run took about 75 minutes; expect
-about 2 hours for 5.
+rulings, each with web search. A 3-round run took about 75 minutes and a
+5-round run about 1 hour 45 minutes.
 
 ## Output
 
