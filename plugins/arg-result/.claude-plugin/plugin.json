@@ -1,7 +1,7 @@
 {
   "name": "arg-result",
   "displayName": "arg-result",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Two independent agents debate a proposition strictly in turn while a neutral judge rules after every speech. Returns only the claims that survived every round, narrowed down to the premise the rest rests on.",
   "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
   "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/arg-result",
