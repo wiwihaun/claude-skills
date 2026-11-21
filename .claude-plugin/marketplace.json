@@ -1,6 +1,6 @@
 {
   "name": "wiwihaun-skills",
-  "description": "Six skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, a stock valuation that writes down what has to be true for today's price, a wider-searching fork of find-skills, and a cover-letter writer that only uses résumé facts you have confirmed.",
+  "description": "Seven skills for Claude Code: a free local YouTube-to-Traditional-Chinese transcript pipeline, a pre-build gate that pressure-tests a product idea before any code gets written, a market survey that turns competitors' documentation into a build spec, a stock valuation that writes down what has to be true for today's price, a wider-searching fork of find-skills, a cover-letter writer that only uses résumé facts you have confirmed, and a debate between two independent agents that keeps only the claims nobody could overturn.",
   "owner": {
     "name": "wiwihaun",
     "url": "https://github.com/wiwihaun"
@@ -81,6 +81,19 @@
         "resume",
         "job-search",
         "career",
+        "zh-hant"
+      ]
+    },
+    {
+      "name": "arg-result",
+      "source": "./plugins/arg-result",
+      "description": "Two independent agents debate a proposition strictly in turn while a neutral judge rules after every speech. Returns only the claims that survived every round, narrowed down to the premise the rest rests on.",
+      "category": "research",
+      "tags": [
+        "debate",
+        "reasoning",
+        "critical-thinking",
+        "multi-agent",
         "zh-hant"
       ]
     }

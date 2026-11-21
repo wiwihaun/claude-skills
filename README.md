@@ -1,6 +1,6 @@
 # claude-skills
 
-Six Claude Code plugins. The first two have nothing to do with each other
+Seven Claude Code plugins. The first two have nothing to do with each other
 except that both exist to stop a particular kind of wasted effort. The other two
 approach the same problem from opposite ends: finding out what already exists
 before you build it, and finding out what you already have before you install
@@ -14,6 +14,7 @@ more.
 | **find-skills** | Finds and installs agent skills, searching your own machine and both on-disk catalogs before the network. A fork of `vercel-labs/skills` | None |
 | **fairprice** | Values a stock by writing down what has to be true for today's price, picking the method before the number | None |
 | **cover-letter-tailor** | Merges every résumé version and the result what you made into one profile you confirm line by line, then writes cover letters from a pasted job description using only those facts | None (macOS) |
+| **arg-result** | Runs a formal debate between two independent agents and a neutral judge, and keeps only the claims that survived every round | None |
 
 ## Install
 
@@ -43,6 +44,10 @@ claude plugin install fairprice@wiwihaun-skills
 
 ```bash
 claude plugin install cover-letter-tailor@wiwihaun-skills
+```
+
+```bash
+claude plugin install arg-result@wiwihaun-skills
 ```
 
 Install any one on its own — they share no code.
@@ -303,6 +308,38 @@ storyline are left for the interview, not squeezed in.
 
 The folder is personal data, so nothing is uploaded, searched or put in a URL.
 More in [`plugins/cover-letter-tailor/README.md`](plugins/cover-letter-tailor/README.md).
+
+---
+
+## arg-result
+
+A pros-and-cons list tells you what each side would say. This tells you which
+of those things are still standing after the other side has had a go at them.
+
+```
+/arg-result:arg-result 現在 AI 這麼方便，資深工程師的意義在哪？ n=5
+```
+
+**Two independent agents argue strictly in turn.** One speaks, a neutral third
+agent rules on what that speech overturned, and only then does the other side
+read it. Neither side ever sees the other's notes or research, so neither can
+quietly go easy on the other.
+
+**Only what survived counts.** A claim survives if it withstood a valid attack
+or the other side conceded it; a claim nobody attacked is listed apart. Claims
+that can be proved wrong by nothing are thrown out as hollow, and the judge
+spot-checks the sources carrying the most weight.
+
+**Narrowing is how it digs.** A claim that is hit can retreat to a narrower
+version, and the report shows every step. From round 3 new claims must dig
+under existing ones, and the judge names the hidden premise both sides lean on
+for the side it hurts to attack or concede. In the test run, "senior engineers
+matter because of organisational knowledge" was narrowed twice, ending at
+"someone still has to own decisions whose results take years to show". The
+claim that experience makes those decisions *better* did not make it.
+
+It is slow on purpose: a 3-round run took about 75 minutes. More in
+[`plugins/arg-result/README.md`](plugins/arg-result/README.md).
 
 ---
 

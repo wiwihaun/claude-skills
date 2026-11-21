@@ -1,0 +1,11 @@
+{
+  "name": "arg-result",
+  "displayName": "arg-result",
+  "version": "1.0.0",
+  "description": "Two independent agents debate a proposition strictly in turn while a neutral judge rules after every speech. Returns only the claims that survived every round, narrowed down to the premise the rest rests on.",
+  "author": { "name": "wiwihaun", "url": "https://github.com/wiwihaun" },
+  "homepage": "https://github.com/wiwihaun/claude-skills/tree/main/plugins/arg-result",
+  "repository": "https://github.com/wiwihaun/claude-skills",
+  "license": "MIT",
+  "keywords": ["debate", "reasoning", "critical-thinking", "multi-agent", "zh-hant"]
+}
